@@ -122,11 +122,14 @@
 /* */
 #define LOG4CPLUS_HAVE_NTOHS 1
 
+/* Define to 1 if you have the `shutdown' function. */
+#define LOG4CPLUS_HAVE_SHUTDOWN 1
+
 /* */
 #define LOG4CPLUS_HAVE_PIPE 1
 
 /* */
-/* #undef LOG4CPLUS_HAVE_PIPE2 */
+#define LOG4CPLUS_HAVE_PIPE2 1
 
 /* */
 #define LOG4CPLUS_HAVE_POLL 1
@@ -159,15 +162,15 @@
 
 /* Defined if the compiler understands __declspec(dllexport) or
    __attribute__((visibility("default"))) construct. */
-/* #undef LOG4CPLUS_DECLSPEC_EXPORT */
+#define LOG4CPLUS_DECLSPEC_EXPORT __attribute__ ((visibility("default")))
 
 /* Defined if the compiler understands __declspec(dllimport) or
    __attribute__((visibility("default"))) construct. */
-/* #undef LOG4CPLUS_DECLSPEC_IMPORT */
+#define LOG4CPLUS_DECLSPEC_IMPORT __attribute__ ((visibility("default")))
 
 /* Defined if the compiler understands
    __attribute__((visibility("hidden"))) construct. */
-/* #undef LOG4CPLUS_DECLSPEC_PRIVATE */
+#define LOG4CPLUS_DECLSPEC_PRIVATE __attribute__ ((visibility("hidden")))
 
 /* */
 #define LOG4CPLUS_HAVE_TLS_SUPPORT 1
@@ -179,10 +182,10 @@
 #define LOG4CPLUS_HAVE_ENAMETOOLONG 1
 
 /* Defined if the compiler provides __sync_add_and_fetch(). */
-/* #undef LOG4CPLUS_HAVE___SYNC_ADD_AND_FETCH */
+#define LOG4CPLUS_HAVE___SYNC_ADD_AND_FETCH 1
 
 /* Defined if the compiler provides __sync_sub_and_fetch(). */
-/* #undef LOG4CPLUS_HAVE___SYNC_SUB_AND_FETCH */
+#define LOG4CPLUS_HAVE___SYNC_SUB_AND_FETCH 1
 
 /* Defined if the compiler provides C++11 <atomic> header and increment,
    decrement operations. */

@@ -311,6 +311,18 @@ namespace log4cplus {
      * </tr>
      *
      * <tr>
+     *   <td align=center><b>E</b></td>
+     * 
+     *   <td>Used to output the value of a given environment variable.  The 
+     *   name of is supplied as an argument in brackets.  If the variable does
+     *   exist then empty string will be used.
+     * 
+     *   For example, the pattern <b>%E{HOME}</b> will output the contents
+     *   of the HOME environment variable.
+     * </td>
+     * </tr>
+     *
+     * <tr>
      *   <td align=center><b>F</b></td>
      * 
      *   <td>Used to output the file name where the logging request was
@@ -431,6 +443,17 @@ namespace log4cplus {
      * 
      *   <td>Used to output the NDC (nested diagnostic context) associated
      *   with the thread that generated the logging event.
+     *   </td>     
+     * </tr>
+     *
+     * <tr>
+     *   <td align=center><b>X</b></td>
+     * 
+     *   <td>Used to output the MDC (mapped diagnostic context)
+     *   associated with the thread that generated the logging
+     *   event. It takes optional key parameter. Without the key
+     *   paramter (%%X), it outputs the whole MDC map. With the key
+     *   (%%X{key}), it outputs just the key's value.
      *   </td>     
      * </tr>
      *

@@ -6,7 +6,7 @@
   <groupId>com.googlecode.narlibs</groupId>
   <artifactId>log4cplus-nar</artifactId>
   <packaging>nar</packaging>
-  <version>1.1.1</version>
+  <version>1.1.2</version>
 
   <description>Log4cplus NAR packaging</description>
   
