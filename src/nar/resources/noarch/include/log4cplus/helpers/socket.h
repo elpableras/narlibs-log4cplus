@@ -5,7 +5,7 @@
 // Author:  Tad E. Smith
 //
 //
-// Copyright 2003-2013 Tad E. Smith
+// Copyright 2003-2015 Tad E. Smith
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ namespace log4cplus {
                            not_opened,
                            bad_address,
                            connection_failed,
-                           broken_pipe, 
+                           broken_pipe,
                            invalid_access_mode,
                            message_truncated,
                            accept_interrupted
@@ -63,7 +63,7 @@ namespace log4cplus {
             /// Close socket
             virtual void close();
             virtual bool isOpen() const;
-            virtual void shutdown(); 
+            virtual void shutdown();
             AbstractSocket& operator=(const AbstractSocket& rhs);
 
         protected:

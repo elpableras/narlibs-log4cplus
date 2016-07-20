@@ -9,6 +9,9 @@
 #define LOG4CPLUS_HAVE_ARPA_INET_H 1
 
 /* */
+/* #undef LOG4CPLUS_HAVE_ATOMIC_H */
+
+/* */
 #define LOG4CPLUS_HAVE_NETINET_IN_H 1
 
 /* */
@@ -154,6 +157,10 @@
    "C" locale. */
 /* #undef LOG4CPLUS_WORKING_C_LOCALE */
 
+/* Define so that log4cplus will use C++11 threads and synchronization
+   primitives. */
+/* #undef LOG4CPLUS_WITH_CXX11_THREADS */
+
 /* Define to int if undefined. */
 /* #undef socklen_t */
 
@@ -186,6 +193,18 @@
 
 /* Defined if the compiler provides __sync_sub_and_fetch(). */
 #define LOG4CPLUS_HAVE___SYNC_SUB_AND_FETCH 1
+
+/* Defined if the compiler provides __atomic_add_fetch(). */
+#define LOG4CPLUS_HAVE___ATOMIC_ADD_FETCH 1
+
+/* Defined if the compiler provides __atomic_sub_fetch(). */
+#define LOG4CPLUS_HAVE___ATOMIC_SUB_FETCH 1
+
+/* Defined if atomic_inc_uint() is available. */
+/* #undef LOG4CPLUS_HAVE_ATOMIC_INC_UINT */
+
+/* Defined if atomic_dec_uint_nv() is available.  */
+/* #undef LOG4CPLUS_HAVE_ATOMIC_DEC_UINT_NV */
 
 /* Defined if the compiler provides C++11 <atomic> header and increment,
    decrement operations. */
@@ -256,5 +275,18 @@
 
 /* Define to 1 if you have the `iconv_open' function. */
 /* #undef LOG4CPLUS_HAVE_ICONV_OPEN */
+
+/* Define to 1 if you have the `OutputDebugString' function. */
+/* #undef LOG4CPLUS_HAVE_OUTPUTDEBUGSTRING */
+
+/* Define to 1 if the system has the `constructor' function attribute
+   with priority */
+#define LOG4CPLUS_HAVE_FUNC_ATTRIBUTE_CONSTRUCTOR_PRIORITY 1
+
+/* Define to 1 if the system has the `constructor' function attribute */
+#define LOG4CPLUS_HAVE_FUNC_ATTRIBUTE_CONSTRUCTOR 1
+
+/* Define to 1 if the system has the `init_priority' variable attribute */
+#define LOG4CPLUS_HAVE_VAR_ATTRIBUTE_INIT_PRIORITY 1
 
 #endif // LOG4CPLUS_CONFIG_DEFINES_HXX

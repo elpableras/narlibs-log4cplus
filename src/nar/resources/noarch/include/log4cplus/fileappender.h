@@ -5,7 +5,7 @@
 // Author:  Tad E. Smith
 //
 //
-// Copyright 2001-2013 Tad E. Smith
+// Copyright 2001-2015 Tad E. Smith
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -43,13 +43,15 @@ namespace log4cplus
 {
 
     /**
-     * Appends log events to a file. 
-     * 
+     * Base class for Appenders writing log events to a file.
+     * It is constructed with uninitialized file object, so all
+     * classes derived from FileAppenderBase _must_ call init() method.
+     *
      * <h3>Properties</h3>
      * <dl>
      * <dt><tt>File</tt></dt>
      * <dd>This property specifies output file name.</dd>
-     * 
+     *
      * <dt><tt>ImmediateFlush</tt></dt>
      * <dd>When it is set true, output stream will be flushed after
      * each appended event.</dd>
@@ -100,20 +102,14 @@ namespace log4cplus
      * \sa spi::getLocaleFactoryRegistry()
      * </dd>
      *
+     * <dt><tt>CreateDirs</tt></dt>
+     * <dd>Set this property to <tt>true</tt> if you want to create
+     * missing directories in path leading to log file and lock file.
+     * </dd>
      * </dl>
      */
-    class LOG4CPLUS_EXPORT FileAppender : public Appender {
+    class LOG4CPLUS_EXPORT FileAppenderBase : public Appender {
     public:
-      // Ctors
-        FileAppender(const log4cplus::tstring& filename, 
-                     std::ios_base::openmode mode = std::ios_base::trunc,
-                     bool immediateFlush = true);
-        FileAppender(const log4cplus::helpers::Properties& properties,
-                     std::ios_base::openmode mode = std::ios_base::trunc);
-
-      // Dtor
-        virtual ~FileAppender();
-
       // Methods
         virtual void close();
 
@@ -121,13 +117,23 @@ namespace log4cplus
       //! provide UTF-8 locale in case UNICODE macro is defined.
         virtual std::locale imbue(std::locale const& loc);
 
-      //! \returns Locale imbued in fstream. 
+      //! \returns Locale imbued in fstream.
         virtual std::locale getloc () const;
 
     protected:
+      // Ctors
+        FileAppenderBase(const log4cplus::tstring& filename,
+                         std::ios_base::openmode mode = std::ios_base::trunc,
+                         bool immediateFlush = true,
+                         bool createDirs = false);
+        FileAppenderBase(const log4cplus::helpers::Properties& properties,
+                         std::ios_base::openmode mode = std::ios_base::trunc);
+
+        void init();
+
         virtual void append(const spi::InternalLoggingEvent& event);
 
-        void open(std::ios_base::openmode mode);
+        virtual void open(std::ios_base::openmode mode);
         bool reopen();
 
       // Data
@@ -139,17 +145,25 @@ namespace log4cplus
          * <code>false</code>, then there is a good chance that the last few
          * logs events are not actually written to persistent media if and
          * when the application crashes.
-         *  
+         *
          * The <code>immediateFlush</code> variable is set to
          * <code>true</code> by default.
          */
         bool immediateFlush;
 
         /**
-         * When any append operation fails, <code>reopenDelay</code> says 
-         * for how many seconds the next attempt to re-open the log file and 
-         * resume logging will be delayed. If <code>reopenDelay</code> is zero, 
-         * each failed append operation will cause log file to be re-opened. 
+         * When this variable is true, FileAppender will try to create
+         * missing directories in path leading to log file.
+         *
+         * The `createDirs` variable is set to `false` by default.
+         */
+        bool createDirs;
+
+        /**
+         * When any append operation fails, <code>reopenDelay</code> says
+         * for how many seconds the next attempt to re-open the log file and
+         * resume logging will be delayed. If <code>reopenDelay</code> is zero,
+         * each failed append operation will cause log file to be re-opened.
          * By default, <code>reopenDelay</code> is 1 second.
          */
         int reopenDelay;
@@ -160,18 +174,42 @@ namespace log4cplus
         log4cplus::tofstream out;
         log4cplus::tstring filename;
         log4cplus::tstring localeName;
+        log4cplus::tstring lockFileName;
+        std::ios_base::openmode fileOpenMode;
 
         log4cplus::helpers::Time reopen_time;
 
     private:
-        LOG4CPLUS_PRIVATE void init(const log4cplus::tstring& filename,
-            std::ios_base::openmode mode,
-            const log4cplus::tstring& lockFileName);
-
       // Disallow copying of instances of this class
-        FileAppender(const FileAppender&);
-        FileAppender& operator=(const FileAppender&);
+        FileAppenderBase(const FileAppenderBase&);
+        FileAppenderBase& operator=(const FileAppenderBase&);
     };
+
+
+    /**
+     * Appends log events to a file.
+     *
+     * <h3>Properties</h3>
+     * <p>It has no properties additional to {@link FileAppenderBase}.
+     */
+    class LOG4CPLUS_EXPORT FileAppender : public FileAppenderBase {
+    public:
+      // Ctors
+        FileAppender(const log4cplus::tstring& filename,
+                     std::ios_base::openmode mode = std::ios_base::trunc,
+                     bool immediateFlush = true,
+                     bool createDirs = false);
+        FileAppender(const log4cplus::helpers::Properties& properties,
+                     std::ios_base::openmode mode = std::ios_base::trunc);
+
+      // Dtor
+        virtual ~FileAppender();
+
+    protected:
+        void init();
+    };
+
+    typedef helpers::SharedObjectPtr<FileAppender> SharedFileAppenderPtr;
 
 
 
@@ -201,7 +239,8 @@ namespace log4cplus
         RollingFileAppender(const log4cplus::tstring& filename,
                             long maxFileSize = 10*1024*1024, // 10 MB
                             int maxBackupIndex = 1,
-                            bool immediateFlush = true);
+                            bool immediateFlush = true,
+                            bool createDirs = false);
         RollingFileAppender(const log4cplus::helpers::Properties& properties);
 
       // Dtor
@@ -219,6 +258,9 @@ namespace log4cplus
         LOG4CPLUS_PRIVATE void init(long maxFileSize, int maxBackupIndex);
     };
 
+
+    typedef helpers::SharedObjectPtr<RollingFileAppender>
+        SharedRollingFileAppenderPtr;
 
 
     enum DailyRollingFileSchedule { MONTHLY, WEEKLY, DAILY,
@@ -243,6 +285,21 @@ namespace log4cplus
      * single logging period; e.g. how many <tt>log.2009-11-07.1</tt>,
      * <tt>log.2009-11-07.2</tt> etc. files are kept.</dd>
      *
+     * <dt><tt>RollOnClose</tt></dt>
+     * <dd>This property specifies whether to rollover log files upon
+     * shutdown. By default it's set to <code>true</code> to retain compatibility
+     * with legacy code, however it may lead to undesired behaviour
+     * as described in the github issue #120.</dd>
+     *
+     * <dt><tt>DatePattern</tt></dt>
+     * <dd>This property specifies filename suffix pattern to use for
+     * periodical backups of the logfile. The patern should be in
+     * format supported by {@link log4cplus::helpers::Time::getFormatterTime()}</code>.
+     * Please notice that the format of the pattern is similar but not identical
+     * to the one used for this option in the corresponding Log4J class.
+     * If the property isn't specified a reasonable default for a given
+     * schedule type is used.</dd>
+     *
      * </dl>
      */
     class LOG4CPLUS_EXPORT DailyRollingFileAppender : public FileAppender {
@@ -251,12 +308,15 @@ namespace log4cplus
         DailyRollingFileAppender(const log4cplus::tstring& filename,
                                  DailyRollingFileSchedule schedule = DAILY,
                                  bool immediateFlush = true,
-                                 int maxBackupIndex = 10);
+                                 int maxBackupIndex = 10,
+                                 bool createDirs = false,
+                                 bool rollOnClose = true,
+                                 const log4cplus::tstring& datePattern = log4cplus::tstring());
         DailyRollingFileAppender(const log4cplus::helpers::Properties& properties);
 
       // Dtor
         virtual ~DailyRollingFileAppender();
-        
+
       // Methods
         virtual void close();
 
@@ -271,12 +331,92 @@ namespace log4cplus
         log4cplus::tstring scheduledFilename;
         log4cplus::helpers::Time nextRolloverTime;
         int maxBackupIndex;
+        bool rollOnClose;
+        log4cplus::tstring datePattern;
 
     private:
         LOG4CPLUS_PRIVATE void init(DailyRollingFileSchedule schedule);
     };
 
+    typedef helpers::SharedObjectPtr<DailyRollingFileAppender>
+        SharedDailyRollingFileAppenderPtr;
+
+
+    /**
+     * TimeBasedRollingFileAppender extends {@link FileAppenderBase} so that
+     * the underlying file is rolled over at a user chosen frequency while also
+     * keeping in check a total maximum number of produced files.
+     *
+     * <h3>Properties</h3>
+     * <p>Properties additional to {@link FileAppenderBase}'s properties:
+     *
+     * <dl>
+     *
+     * <dt><tt>FilenamePattern</tt></dt>
+     * <dd>The mandatory fileNamePattern property defines the name of the
+     * rolled-over (archived) log files. Its value should consist of the name
+     * of the file, plus a suitably placed %d conversion specifier. The %d
+     * conversion specifier may contain a date-and-time pattern as specified by
+     * the java's SimpleDateFormat.  The rollover period is inferred from the
+     * value of fileNamePattern.</dd>
+     *
+     * <dt><tt>MaxHistory</tt></dt>
+     * <dd>The optional maxHistory property controls the maximum number of
+     * archive files to keep, deleting older files.</dd>
+     *
+     * <dt><tt>CleanHistoryOnStart</tt></dt>
+     * <dd>If set to true, archive removal will be executed on appender start
+     * up.  By default this property is set to false. </dd>
+     *
+     * <dt><tt>RollOnClose</tt></dt>
+     * <dd>This property specifies whether to rollover log files upon
+     * shutdown. By default it's set to <code>true</code> to retain compatibility
+     * with legacy code, however it may lead to undesired behaviour
+     * as described in the github issue #120.</dd>
+     *
+     * </dl>
+     */
+    class LOG4CPLUS_EXPORT TimeBasedRollingFileAppender : public FileAppenderBase {
+    public:
+      // Ctors
+        TimeBasedRollingFileAppender(const tstring& filename = LOG4CPLUS_TEXT(""),
+                                     const tstring& filenamePattern = LOG4CPLUS_TEXT("%d.log"),
+                                     int maxHistory = 10,
+                                     bool cleanHistoryOnStart = false,
+                                     bool immediateFlush = true,
+                                     bool createDirs = false,
+                                     bool rollOnClose = true);
+        TimeBasedRollingFileAppender(const helpers::Properties& properties);
+
+      // Dtor
+        ~TimeBasedRollingFileAppender();
+
+    protected:
+        void append(const spi::InternalLoggingEvent& event);
+        void open(std::ios_base::openmode mode);
+        void close();
+        void rollover(bool alreadyLocked = false);
+        void clean(helpers::Time time);
+        int getRolloverPeriodDuration() const;
+        helpers::Time calculateNextRolloverTime(const helpers::Time& t) const;
+
+      // Data
+        tstring filenamePattern;
+        DailyRollingFileSchedule schedule;
+        tstring scheduledFilename;
+        int maxHistory;
+        bool cleanHistoryOnStart;
+        helpers::Time lastHeartBeat;
+        helpers::Time nextRolloverTime;
+        bool rollOnClose;
+
+    private:
+        LOG4CPLUS_PRIVATE void init();
+    };
+
+    typedef helpers::SharedObjectPtr<TimeBasedRollingFileAppender>
+        SharedTimeBasedRollingFileAppenderPtr;
+
 } // end namespace log4cplus
 
 #endif // LOG4CPLUS_FILE_APPENDER_HEADER_
-

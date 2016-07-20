@@ -5,7 +5,7 @@
 // Author:  Tad E. Smith
 //
 //
-// Copyright 2003-2013 Tad E. Smith
+// Copyright 2003-2015 Tad E. Smith
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -122,7 +122,7 @@ LOG4CPLUS_EXPORT std::wstring towstring(char const *);
 
 #else // UNICODE
 
-#define LOG4CPLUS_C_STR_TO_TSTRING(STRING) std::string(STRING)
+#define LOG4CPLUS_C_STR_TO_TSTRING(STRING) (std::string(STRING))
 #define LOG4CPLUS_STRING_TO_TSTRING(STRING) STRING
 #define LOG4CPLUS_TSTRING_TO_STRING(STRING) STRING
 

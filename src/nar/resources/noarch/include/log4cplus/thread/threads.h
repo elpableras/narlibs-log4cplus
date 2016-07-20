@@ -5,7 +5,7 @@
 // Author:  Tad E. Smith
 //
 //
-// Copyright 2001-2013 Tad E. Smith
+// Copyright 2001-2015 Tad E. Smith
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -39,6 +39,8 @@ namespace log4cplus { namespace thread {
 
 LOG4CPLUS_EXPORT log4cplus::tstring const & getCurrentThreadName();
 LOG4CPLUS_EXPORT log4cplus::tstring const & getCurrentThreadName2();
+LOG4CPLUS_EXPORT void setCurrentThreadName(const log4cplus::tstring & name);
+LOG4CPLUS_EXPORT void setCurrentThreadName2(const log4cplus::tstring & name);
 LOG4CPLUS_EXPORT void yield();
 LOG4CPLUS_EXPORT void blockAllSignals();
 
