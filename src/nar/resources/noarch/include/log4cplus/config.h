@@ -5,28 +5,8 @@
 
 #define LOG4CPLUS_CONFIG_H
 
-/* Defined if the compiler supports C99 style variadic macros with
-   __VA_ARGS__. */
-/* #undef HAS_C99_VARIADIC_MACROS */
-
-/* Defined if the compiler supports GNU style variadic macros. */
-/* #undef HAS_GNU_VARIADIC_MACROS */
-
-/* Defined if the compiler provides atomic_dec_uint_nv(). */
-/* #undef HAVE_ATOMIC_DEC_UINT_NV */
-
-/* Defined if the compiler provides atomic_inc_uint(). */
-/* #undef HAVE_ATOMIC_INC_UINT */
-
-/* Define to 1 if you have the `clock_gettime' function. */
-#define HAVE_CLOCK_GETTIME 1
-
-/* Define to 1 if you have the `clock_nanosleep' function. */
-#define HAVE_CLOCK_NANOSLEEP 1
-
-/* Defined if the compiler provides C++11 <atomic> header and increment,
-   decrement operations. */
-/* #undef HAVE_CXX11_ATOMICS */
+/* define if the compiler supports basic C++11 syntax */
+/* #undef HAVE_CXX11 */
 
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #define HAVE_DLFCN_H 1
@@ -55,9 +35,6 @@
 
 /* Define to 1 if you have the `getpid' function. */
 #define HAVE_GETPID 1
-
-/* Define to 1 if you have the `gettimeofday' function. */
-#define HAVE_GETTIMEOFDAY 1
 
 /* Define to 1 if you have the `gmtime_r' function. */
 #define HAVE_GMTIME_R 1
@@ -115,9 +92,6 @@
 
 /* Define to 1 if you have the <memory.h> header file. */
 #define HAVE_MEMORY_H 1
-
-/* Define to 1 if you have the `nanosleep' function. */
-#define HAVE_NANOSLEEP 1
 
 /* Define to 1 if you have the `ntohl' function. */
 #define HAVE_NTOHL 1
@@ -213,12 +187,6 @@
 /* Define to 1 if you have the `_vsnwprintf_s' function. */
 /* #undef HAVE__VSNWPRINTF_S */
 
-/* Defined if the compiler provides __atomic_add_fetch(). */
-#define HAVE___ATOMIC_ADD_FETCH 1
-
-/* Defined if the compiler provides __atomic_sub_fetch(). */
-#define HAVE___ATOMIC_SUB_FETCH 1
-
 /* Defined if the compiler supports __FUNCTION__ macro. */
 /* #undef HAVE___FUNCTION___MACRO */
 
@@ -227,12 +195,6 @@
 
 /* Defined if the compiler supports __PRETTY_FUNCTION__ macro. */
 /* #undef HAVE___PRETTY_FUNCTION___MACRO */
-
-/* Defined if the compiler provides __sync_add_and_fetch(). */
-#define HAVE___SYNC_ADD_AND_FETCH 1
-
-/* Defined if the compiler provides __sync_sub_and_fetch(). */
-#define HAVE___SYNC_SUB_AND_FETCH 1
 
 /* Defined for --enable-debugging builds. */
 /* #undef LOG4CPLUS_DEBUGGING */
@@ -252,28 +214,7 @@
 /* */
 #define LOG4CPLUS_HAVE_ARPA_INET_H 1
 
-/* */
-/* #undef LOG4CPLUS_HAVE_ATOMIC_DEC_UINT_NV */
-
-/* */
-/* #undef LOG4CPLUS_HAVE_ATOMIC_H */
-
-/* */
-/* #undef LOG4CPLUS_HAVE_ATOMIC_INC_UINT */
-
-/* */
-#define LOG4CPLUS_HAVE_C99_VARIADIC_MACROS 1
-
-/* */
-#define LOG4CPLUS_HAVE_CLOCK_GETTIME 1
-
-/* */
-#define LOG4CPLUS_HAVE_CLOCK_NANOSLEEP 1
-
-/* */
-/* #undef LOG4CPLUS_HAVE_CXX11_ATOMICS */
-
-/* */
+/* Define if ENAMETOOLONG is provided. */
 #define LOG4CPLUS_HAVE_ENAMETOOLONG 1
 
 /* */
@@ -291,38 +232,32 @@
 /* */
 #define LOG4CPLUS_HAVE_FTIME 1
 
-/* */
+/* Define if compiler supports __FUNCTION__ macro. */
 #define LOG4CPLUS_HAVE_FUNCTION_MACRO 1
 
-/* */
+/* Define if compiler supports __attribute__((constructor)). */
 #define LOG4CPLUS_HAVE_FUNC_ATTRIBUTE_CONSTRUCTOR 1
 
-/* */
+/* Define if compiler supports __attribute__((constructor(PRIORITY))). */
 #define LOG4CPLUS_HAVE_FUNC_ATTRIBUTE_CONSTRUCTOR_PRIORITY 1
 
-/* */
+/* Define if compiler supports __func__ symbol. */
 #define LOG4CPLUS_HAVE_FUNC_SYMBOL 1
 
-/* */
+/* Define if getaddrinfo() is provided. */
 #define LOG4CPLUS_HAVE_GETADDRINFO 1
 
-/* */
+/* Define if gethostbyname_r() is provided. */
 #define LOG4CPLUS_HAVE_GETHOSTBYNAME_R 1
 
 /* */
 #define LOG4CPLUS_HAVE_GETPID 1
 
-/* */
+/* Define if gettid() Linux syscall is available. */
 #define LOG4CPLUS_HAVE_GETTID 1
 
 /* */
-#define LOG4CPLUS_HAVE_GETTIMEOFDAY 1
-
-/* */
 #define LOG4CPLUS_HAVE_GMTIME_R 1
-
-/* */
-#define LOG4CPLUS_HAVE_GNU_VARIADIC_MACROS 1
 
 /* */
 #define LOG4CPLUS_HAVE_HTONL 1
@@ -358,9 +293,6 @@
 #define LOG4CPLUS_HAVE_MBSTOWCS 1
 
 /* */
-#define LOG4CPLUS_HAVE_NANOSLEEP 1
-
-/* */
 #define LOG4CPLUS_HAVE_NETDB_H 1
 
 /* */
@@ -390,7 +322,7 @@
 /* */
 #define LOG4CPLUS_HAVE_POLL_H 1
 
-/* */
+/* DEfine if compiler supports __PRETTY_FUNCTION__ macro. */
 #define LOG4CPLUS_HAVE_PRETTY_FUNCTION_MACRO 1
 
 /* */
@@ -441,7 +373,7 @@
 /* */
 #define LOG4CPLUS_HAVE_UNISTD_H 1
 
-/* */
+/* Define if compiler supports __attribute__((init_priority(PRIORITY))). */
 #define LOG4CPLUS_HAVE_VAR_ATTRIBUTE_INIT_PRIORITY 1
 
 /* */
@@ -480,33 +412,20 @@
 /* */
 /* #undef LOG4CPLUS_HAVE__VSNWPRINTF_S */
 
-/* */
-#define LOG4CPLUS_HAVE___ATOMIC_ADD_FETCH 1
-
-/* */
-#define LOG4CPLUS_HAVE___ATOMIC_SUB_FETCH 1
-
-/* */
-#define LOG4CPLUS_HAVE___SYNC_ADD_AND_FETCH 1
-
-/* */
-#define LOG4CPLUS_HAVE___SYNC_SUB_AND_FETCH 1
-
 /* Define if this is a single-threaded library. */
 /* #undef LOG4CPLUS_SINGLE_THREADED */
 
 /* */
-#define LOG4CPLUS_THREAD_LOCAL_VAR __thread
+#define LOG4CPLUS_THREAD_LOCAL_VAR thread_local
 
 /* */
 /* #undef LOG4CPLUS_USE_PTHREADS */
 
-/* Define so that log4cplus will use C++11 threads and synchronization
-   primitives. */
-/* #undef LOG4CPLUS_WITH_CXX11_THREADS */
-
 /* Define when iconv() is available. */
 /* #undef LOG4CPLUS_WITH_ICONV */
+
+/* Defined to enable unit tests. */
+/* #undef LOG4CPLUS_WITH_UNIT_TESTS */
 
 /* Define for C99 compilers/standard libraries that support more than just the
    "C" locale. */
@@ -527,7 +446,7 @@
 #define PACKAGE_NAME "log4cplus"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "log4cplus 1.2.0"
+#define PACKAGE_STRING "log4cplus 2.0.0"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "log4cplus"
@@ -536,7 +455,7 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "1.2.0"
+#define PACKAGE_VERSION "2.0.0"
 
 /* Define to necessary symbol if this constant uses a non-standard name on
    your system. */
@@ -546,7 +465,7 @@
 #define STDC_HEADERS 1
 
 /* Defined to the actual TLS support construct. */
-#define TLS_SUPPORT_CONSTRUCT __thread
+#define TLS_SUPPORT_CONSTRUCT thread_local
 
 /* Substitute for socklen_t */
 /* #undef socklen_t */

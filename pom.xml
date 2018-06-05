@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <name>Log4cplus NAR package</name>
   <groupId>com.googlecode.narlibs</groupId>
-  <artifactId>log4cplus-nar</artifactId>
+  <artifactId>log4cplus</artifactId>
   <packaging>nar</packaging>
   <version>2.0.1-SNAPSHOT</version>
 

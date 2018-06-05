@@ -5,7 +5,7 @@
 // Author:  Vaclav Haisman
 //
 //
-//  Copyright (C) 2010-2015, Vaclav Haisman. All rights reserved.
+//  Copyright (C) 2010-2017, Vaclav Haisman. All rights reserved.
 //
 //  Redistribution and use in source and binary forms, with or without modifica-
 //  tion, are permitted provided that the following conditions are met:
@@ -171,14 +171,11 @@ struct socket_holder
         return s;
     }
 
-private:
-    socket_holder (socket_holder const &);
-    socket_holder operator = (socket_holder const &);
+    socket_holder(socket_holder &&) = delete;
+    socket_holder(socket_holder const &) = delete;
 
-#if defined (LOG4CPLUS_HAVE_CXX11_SUPPORT)
-    socket_holder (socket_holder &&);
-    socket_holder operator = (socket_holder &&);
-#endif
+    socket_holder operator = (socket_holder &&) = delete;
+    socket_holder operator = (socket_holder const &) = delete;
 };
 
 

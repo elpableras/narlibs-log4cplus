@@ -5,7 +5,7 @@
 // Author:  Tad E. Smith
 //
 //
-// Copyright 2001-2015 Tad E. Smith
+// Copyright 2001-2017 Tad E. Smith
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -106,6 +106,12 @@ namespace log4cplus
      * <dd>Set this property to <tt>true</tt> if you want to create
      * missing directories in path leading to log file and lock file.
      * </dd>
+     *
+     * <dt><tt>TextMode</tt></dt>
+     * <dd>Set this property to <tt>Binary</tt> if the underlying stream should
+     * not translate EOLs to OS specific character sequence. The default value
+     * is <tt>Text</tt> and the underlying stream will be opened in text
+     * mode.</dd>
      * </dl>
      */
     class LOG4CPLUS_EXPORT FileAppenderBase : public Appender {
@@ -169,7 +175,7 @@ namespace log4cplus
         int reopenDelay;
 
         unsigned long bufferSize;
-        log4cplus::tchar * buffer;
+        std::unique_ptr<log4cplus::tchar[]> buffer;
 
         log4cplus::tofstream out;
         log4cplus::tstring filename;
@@ -397,7 +403,7 @@ namespace log4cplus
         void close();
         void rollover(bool alreadyLocked = false);
         void clean(helpers::Time time);
-        int getRolloverPeriodDuration() const;
+        helpers::Time::duration getRolloverPeriodDuration() const;
         helpers::Time calculateNextRolloverTime(const helpers::Time& t) const;
 
       // Data
@@ -406,8 +412,8 @@ namespace log4cplus
         tstring scheduledFilename;
         int maxHistory;
         bool cleanHistoryOnStart;
-        helpers::Time lastHeartBeat;
-        helpers::Time nextRolloverTime;
+        log4cplus::helpers::Time lastHeartBeat;
+        log4cplus::helpers::Time nextRolloverTime;
         bool rollOnClose;
 
     private:

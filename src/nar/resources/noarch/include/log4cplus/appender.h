@@ -5,7 +5,7 @@
 // Author:  Tad E. Smith
 //
 //
-// Copyright 2001-2015 Tad E. Smith
+// Copyright 2001-2017 Tad E. Smith
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -38,6 +38,9 @@
 #include <log4cplus/helpers/lockfile.h>
 
 #include <memory>
+#include <mutex>
+#include <atomic>
+#include <condition_variable>
 
 
 namespace log4cplus {
@@ -151,7 +154,7 @@ namespace log4cplus {
         /**
          * Release any resources allocated within the appender such as file
          * handles, network connections, etc.
-         * 
+         *
          * It is a programming error to append to a closed appender.
          */
         virtual void close() = 0;
@@ -165,6 +168,20 @@ namespace log4cplus {
          * This method performs threshold checks and invokes filters before
          * delegating actual logging to the subclasses specific {@link
          * #append} method.
+         */
+        void syncDoAppend(const log4cplus::spi::InternalLoggingEvent& event);
+
+        /**
+         * This method performs book keeping related to asynchronous logging
+         * and executes `syncDoAppend()` to do the actual logging.
+         */
+
+        void asyncDoAppend(const log4cplus::spi::InternalLoggingEvent& event);
+
+        /**
+         * This function checks `async` flag. It either executes
+         * `syncDoAppend()` directly or enqueues its execution to thread pool
+         * thread.
          */
         void doAppend(const log4cplus::spi::InternalLoggingEvent& event);
 
@@ -183,7 +200,7 @@ namespace log4cplus {
         /**
          * Set the {@link ErrorHandler} for this Appender.
          */
-        virtual void setErrorHandler(std::auto_ptr<ErrorHandler> eh);
+        virtual void setErrorHandler(std::unique_ptr<ErrorHandler> eh);
 
         /**
          * Return the currently set {@link ErrorHandler} for this
@@ -196,11 +213,11 @@ namespace log4cplus {
          * their own (fixed) layouts or do not use one. For example, the
          * SocketAppender ignores the layout set here.
          */
-        virtual void setLayout(std::auto_ptr<Layout> layout);
+        virtual void setLayout(std::unique_ptr<Layout> layout);
 
         /**
          * Returns the layout of this appender. The value may be NULL.
-         * 
+         *
          * This class owns the returned pointer.
          */
         virtual Layout* getLayout();
@@ -208,12 +225,23 @@ namespace log4cplus {
         /**
          * Set the filter chain on this Appender.
          */
-        void setFilter(log4cplus::spi::FilterPtr f) { filter = f; }
+        void setFilter(log4cplus::spi::FilterPtr f);
 
         /**
          * Get the filter chain on this Appender.
          */
-        log4cplus::spi::FilterPtr getFilter() const { return filter; }
+        log4cplus::spi::FilterPtr getFilter() const;
+
+        /**
+         * Add filter at the end of the filters chain.
+         */
+        void addFilter (log4cplus::spi::FilterPtr f);
+
+        /**
+         * Add filter at the end of the filters chain.
+         */
+        void addFilter (std::function<
+            spi::FilterResult (const log4cplus::spi::InternalLoggingEvent &)>);
 
         /**
          * Returns this appenders threshold LogLevel. See the {@link
@@ -224,7 +252,7 @@ namespace log4cplus {
         /**
          * Set the threshold LogLevel. All log events with lower LogLevel
          * than the threshold LogLevel are ignored by the appender.
-         * 
+         *
          * In configuration files this option is specified by setting the
          * value of the <b>Threshold</b> option to a LogLevel
          * string, such as "DEBUG", "INFO" and so on.
@@ -240,6 +268,12 @@ namespace log4cplus {
             return ((ll != NOT_SET_LOG_LEVEL) && (ll >= threshold));
         }
 
+        /**
+         * This method waits for all events that are being asynchronously
+         * logged to finish.
+         */
+        void waitToFinishAsyncLogging();
+
     protected:
       // Methods
         /**
@@ -254,7 +288,7 @@ namespace log4cplus {
       // Data
         /** The layout variable does not need to be set if the appender
          *  implementation has its own layout. */
-        std::auto_ptr<Layout> layout;
+        std::unique_ptr<Layout> layout;
 
         /** Appenders are named. */
         log4cplus::tstring name;
@@ -267,17 +301,30 @@ namespace log4cplus {
         log4cplus::spi::FilterPtr filter;
 
         /** It is assumed and enforced that errorHandler is never null. */
-        std::auto_ptr<ErrorHandler> errorHandler;
+        std::unique_ptr<ErrorHandler> errorHandler;
 
         //! Optional system wide synchronization lock.
-        std::auto_ptr<helpers::LockFile> lockFile;
+        std::unique_ptr<helpers::LockFile> lockFile;
 
         //! Use lock file for inter-process synchronization of access
         //! to log file.
         bool useLockFile;
 
+        //! Asynchronous append.
+        bool async;
+#if ! defined (LOG4CPLUS_SINGLE_THREADED)
+        std::atomic<std::size_t> in_flight;
+        std::mutex in_flight_mutex;
+        std::condition_variable in_flight_condition;
+#endif
+
         /** Is this appender closed? */
         bool closed;
+
+    private:
+#if ! defined (LOG4CPLUS_SINGLE_THREADED)
+        void subtract_in_flight();
+#endif
     };
 
     /** This is a pointer to an Appender. */
@@ -286,4 +333,3 @@ namespace log4cplus {
 } // end namespace log4cplus
 
 #endif // LOG4CPLUS_APPENDER_HEADER_
-

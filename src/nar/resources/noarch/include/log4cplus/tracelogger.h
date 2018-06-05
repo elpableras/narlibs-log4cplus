@@ -5,7 +5,7 @@
 // Author:  Vaclav Haisman
 //
 //
-// Copyright 2009-2015 Tad E. Smith
+// Copyright 2009-2017 Tad E. Smith
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -50,22 +50,23 @@ namespace log4cplus
 class TraceLogger
 {
 public:
-    TraceLogger(const Logger& l, const log4cplus::tstring& _msg,
+    TraceLogger(Logger l, log4cplus::tstring _msg,
         const char* _file = LOG4CPLUS_CALLER_FILE (),
         int _line = LOG4CPLUS_CALLER_LINE (),
-        char const * _function = LOG4CPLUS_CALLER_FUNCTION ()) 
-        : logger(l), msg(_msg), file(_file), function(_function), line(_line)
+        char const * _function = LOG4CPLUS_CALLER_FUNCTION ())
+        : logger(std::move (l)), msg(std::move (_msg)), file(_file),
+          function(_function), line(_line)
     {
         if(logger.isEnabledFor(TRACE_LOG_LEVEL))
             logger.forcedLog(TRACE_LOG_LEVEL, LOG4CPLUS_TEXT("ENTER: ") + msg,
-                file, line, function); 
+                file, line, function);
     }
 
     ~TraceLogger()
     {
         if(logger.isEnabledFor(TRACE_LOG_LEVEL))
             logger.forcedLog(TRACE_LOG_LEVEL, LOG4CPLUS_TEXT("EXIT:  ") + msg,
-                file, line, function); 
+                file, line, function);
     }
 
 private:

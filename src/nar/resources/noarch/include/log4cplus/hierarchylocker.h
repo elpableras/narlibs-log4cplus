@@ -5,7 +5,7 @@
 // Author:  Tad E. Smith
 //
 //
-// Copyright 2003-2015 Tad E. Smith
+// Copyright 2003-2017 Tad E. Smith
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -48,25 +48,25 @@ namespace log4cplus
     public:
       // ctor & dtor
         HierarchyLocker(Hierarchy& h);
-        ~HierarchyLocker();
-        
+        ~HierarchyLocker() LOG4CPLUS_NOEXCEPT_FALSE;
+
         /**
          * Calls the <code>resetConfiguration()</code> method on the locked Hierarchy.
          */
-        void resetConfiguration(); 
-        
+        void resetConfiguration();
+
         /**
          * Calls the <code>getInstance()</code> method on the locked Hierarchy.
          */
         Logger getInstance(const log4cplus::tstring& name);
-        
+
         /**
          * Calls the <code>getInstance()</code> method on the locked Hierarchy.
          */
         Logger getInstance(const log4cplus::tstring& name, spi::LoggerFactory& factory);
-        
+
         void addAppender(Logger &logger, log4cplus::SharedAppenderPtr& appender);
-        
+
     private:
       // Data
         Hierarchy& h;
@@ -77,4 +77,3 @@ namespace log4cplus
 } // end namespace log4cplus
 
 #endif // LOG4CPLUS_HIERARCHY_LOCKER_HEADER_
-

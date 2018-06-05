@@ -5,7 +5,7 @@
 // Author:  Tad E. Smith
 //
 //
-// Copyright 2001-2015 Tad E. Smith
+// Copyright 2001-2017 Tad E. Smith
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -33,8 +33,10 @@
 #include <log4cplus/loglevel.h>
 #include <log4cplus/streams.h>
 #include <log4cplus/tstring.h>
+#include <log4cplus/helpers/timehelper.h>
 
 #include <vector>
+#include <memory>
 
 
 namespace log4cplus {
@@ -52,7 +54,6 @@ namespace log4cplus {
     {
 
         class Properties;
-        class Time;
 
     }
 
@@ -184,10 +185,10 @@ namespace log4cplus {
 
     protected:
        log4cplus::tstring dateFormat;
-       bool use_gmtime;
-       bool thread_printing;
-       bool category_prefixing;
-       bool context_printing;
+       bool use_gmtime = false;
+       bool thread_printing = true;
+       bool category_prefixing = true;
+       bool context_printing = true;
 
     private:
       // Disallow copying of instances of this class
@@ -629,7 +630,7 @@ namespace log4cplus {
 
       // Data
         log4cplus::tstring pattern;
-        std::vector<pattern::PatternConverter*> parsedPattern;
+        std::vector<std::unique_ptr<pattern::PatternConverter> > parsedPattern;
 
     private:
       // Disallow copying of instances of this class
