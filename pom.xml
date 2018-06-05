@@ -6,38 +6,137 @@
   <groupId>com.googlecode.narlibs</groupId>
   <artifactId>log4cplus-nar</artifactId>
   <packaging>nar</packaging>
-  <version>1.2.0.1</version>
+  <version>2.0.1-SNAPSHOT</version>
 
   <description>Log4cplus NAR packaging</description>
+  <url>https://github.com/CERN/narlibs-log4cplus</url>
   
-  <distributionManagement>
-    <repository>
-      <id>CERN</id>
-      <name>CERN Repository</name>
-      <url>https://repository.cern.ch/nexus/content/repositories/enice-releases</url>
-    </repository>
-    <snapshotRepository>
-      <id>CERN Snapshot Repository</id>
-      <name>CERN Snapshot Repository</name>
-      <url>https://repository.cern.ch/nexus/content/repositories/enice-snapshots</url>
-    </snapshotRepository>
-  </distributionManagement>
-    
+  <organization>
+    <name>CERN</name>
+    <url>http://home.cern</url>
+  </organization>
+
+  <licenses>
+      <license>
+        <name>Apache License v2</name>
+        <url>http://www.apache.org/licenses/</url>
+        <distribution>repo</distribution>
+      </license>
+    </licenses>
+  <developers>
+    <developer>
+      <id>cern-github-bot</id>
+      <name>CERN Github Bot</name>
+      <email>cern-github-bot@cern.ch</email>
+      <url>http://home.cern</url>
+      <organization>CERN</organization>
+      <organizationUrl>http://home.cern</organizationUrl>
+      <roles>
+        <role>bot</role>
+      </roles>
+      <timezone>CEST</timezone>
+    </developer>
+  </developers>
+
+  <scm>
+    <url>https://github.com/CERN/narlibs-log4cplus</url>
+    <connection>scm:git:git://github.com/CERN/narlibs-log4cplus.git</connection>
+    <developerConnection>scm:git:git://github.com/CERN/narlibs-log4cplus.git</developerConnection>
+    <tag>HEAD</tag>
+  </scm>
+
+  <properties>
+    <upstream.version>${version.unsnapshot}</upstream.version>
+    <upstream.url>https://github.com/log4cplus/log4cplus</upstream.url>
+    <project.scm.id>github</project.scm.id>
+  </properties>
+
+   
   <build>
     <plugins>
       <plugin>
+         <groupId>com.jamesward</groupId>
+         <artifactId>unsnapshot-maven-plugin</artifactId>
+         <version>0.2</version>
+         <executions>
+             <execution>
+                 <phase>initialize</phase>
+                 <goals><goal>unsnapshot</goal></goals>
+             </execution>
+         </executions>
+      </plugin>
+     <plugin>
 	<groupId>com.github.maven-nar</groupId>
 	<artifactId>nar-maven-plugin</artifactId>
 	<version>3.2.3</version>
         <extensions>true</extensions>
         <configuration>
             <libraries>
-            <library>
-                <type>shared</type>
-            </library>
+              <library> <type>shared</type> </library>
             </libraries>
-	</configuration>
+	    </configuration>
       </plugin>
     </plugins>
   </build>
+  
+  <profiles>
+        <profile>
+            <id>ossrh</id>
+            <properties>
+                <gpg.executable>gpg</gpg.executable>
+                <gpg.keyname>${env.GPG_KEYNAME}</gpg.keyname>
+                <gpg.passphrase>${env.GPG_PASSPHRASE}</gpg.passphrase>
+                <gpg.defaultKeyring>false</gpg.defaultKeyring>
+                <gpg.publicKeyring>${env.GPG_DIR}/pubring.gpg</gpg.publicKeyring>
+                <gpg.secretKeyring>${env.GPG_DIR}/secring.gpg</gpg.secretKeyring>
+            </properties>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.5</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>1.6.2</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>ossrh</serverId>
+                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </snapshotRepository>
+                <repository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
+            </distributionManagement>  
+        </profile>
+    </profiles>
+
+  
 </project>
