@@ -34,7 +34,7 @@ pipeline {
 					agent { label "unix" }
 					steps {
 						copyArtifacts filter: 'include/log4cplus/**/*.*', fingerprintArtifacts: true, flatten: true, optional: true, projectName: 'log4cplus', target: 'src/nar/resources/noarch/'
-						//copyArtifacts filter: '.libs/liblog4cplus.so', fingerprintArtifacts: true, projectName: 'log4cplus', target: 'src/nar/resources/aol/amd64-Linux-gpp/lib/'						
+						copyArtifacts filter: '.libs/liblog4cplus.so', fingerprintArtifacts: true, flatten: true, optional: true, projectName: 'log4cplus', target: 'src/nar/resources/aol/amd64-Linux-gpp/lib/'
 						//sh 'mv src/nar/resources/aol/amd64-Linux-gpp/lib/liblog4cplus.so src/nar/resources/aol/amd64-Linux-gpp/lib/liblog4cplus-nar-2.0.0.so'
 					}					
 				}
