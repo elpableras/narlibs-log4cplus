@@ -41,5 +41,32 @@ pipeline {
 				}
 			}
 		}
+		
+		stage('Package') { 
+			parallel {
+				stage('Windows') {                  
+					agent { label "windows" }
+					steps {
+						script {
+							withMaven(maven: 'Maven-3.2.x', mavenSettingsConfig: 'c2monSettingsConfig') {
+						    		sh 'mvn package'
+								//sh 'mvn deploy'
+							}
+						}						
+					}
+				}
+				stage('Unix') {            
+					agent { label "unix" }
+					steps {
+						script {
+							withMaven(maven: 'Maven-3.2.x', mavenSettingsConfig: 'c2monSettingsConfig') {
+						    		sh 'mvn package'
+								//sh 'mvn deploy'
+							}
+						}						
+					}					
+				}
+			}
+		}
 	}
 }
