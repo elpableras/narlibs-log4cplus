@@ -53,15 +53,15 @@ pipeline {
 			}					
 		}
 		
-		stage('Deploy') { 
-			agent { label "unix" }
-			steps {
-				script {
-					withMaven(maven: 'Maven-3.2.x', mavenSettingsConfig: 'c2monSettingsConfig') {
-				    		sh 'mvn deploy'
-					}
-				}						
-			}					
-		}
+		//stage('Deploy') { 
+		//	agent { label "unix" }
+		//	steps {
+		//		script {
+		//			withMaven(maven: 'Maven-3.2.x', mavenSettingsConfig: 'c2monSettingsConfig') {
+		//		    		sh 'mvn deploy'
+		//			}
+		//		}						
+		//	}					
+		//}
 	}
 }
