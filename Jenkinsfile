@@ -31,14 +31,14 @@ pipeline {
 			}					
 		}
 		
-		//stage('Deploy') { 
-		//	steps {
-		//		script {
-		//			withMaven(maven: 'Maven-3.2.x', mavenSettingsConfig: 'c2monSettingsConfig') {						
-		//				//sh 'mvn deploy'
-		//			}
-		//		}						
-		//	}					
-		//}
+		stage('Deploy') { 
+			steps {
+				script {
+					withMaven(maven: 'Maven-3.2.x', mavenSettingsConfig: 'c2monSettingsConfig') {						
+						sh 'mvn deploy'
+					}
+				}						
+			}					
+		}
 	}
 }
